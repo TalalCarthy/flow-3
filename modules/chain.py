@@ -1,31 +1,29 @@
 import streamlit as st
-from langchain.memory import ConversationBufferMemory
+
+from modules.retriever import get_retriever
+
+from langchain.chains import LLMChain
 from langchain.chains import RetrievalQA
-# from langchain.chains import DocumentQA
-from langchain.chains import ConversationalRetrievalChain
 
 
-def get_chain(chain_type, document_chain_type, retriever):
-    if chain_type == 'Retrieval QA':
-        st.session_state['chain'] = RetrievalQA.from_chain_type(
-            llm=st.session_state['chat_llm'],
-            chain_type=document_chain_type,
-            retriever=retriever
+def set_chain(session_prefix, chain_type):
+    if chain_type == 'LLM Chain':
+        st.session_state[f'{session_prefix}_chain'] = LLMChain(
+            llm=st.session_state[f'{session_prefix}_llm_chain_llm'],
+            prompt=st.session_state[f'{session_prefix}_llm_chain_template'],
+            memory=st.session_state[f'{session_prefix}_llm_chain_memory'])
+    elif chain_type == 'Retrieval QA':
+        st.session_state[f'{session_prefix}_chain'] = RetrievalQA.from_chain_type(
+            llm=st.session_state[f'{session_prefix}_retrieval_qa'],
+            chain_type=st.session_state[f'{session_prefix}_document_chain_type'],
+            retriever=get_retriever()
         )
-    elif chain_type == 'Document QA':
-        # st.session_state['chain'] = DocumentQA.from_chain_type(
-        #     llm=st.session_state['chat_llm'],
-        #     retriever=retriever
-        # )
-        pass
     elif chain_type == 'Conversational Retrieval QA':
-        memory = ConversationBufferMemory(
-            memory_key="chat_history", return_messages=True)
-        st.session_state['chain'] = ConversationalRetrievalChain.from_llm(
-            st.session_state['chat_llm'],
-            retriever,
-            memory=memory
-        )
+        pass
+    elif chain_type == 'FLARE':
+        pass
+    elif chain_type == 'QA over in-memory documents':
+        pass
 
 
-__all__ = ['get_chain']
+__all__ = ['set_chain']

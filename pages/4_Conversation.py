@@ -13,13 +13,6 @@ reset()
 with st.sidebar:
     # Token Limit
 
-    # select library
-    library_names = [library['name']
-                     for library in st.session_state['libraries']]
-    selected_library_name = st.selectbox("Select a Library", library_names)
-    selected_library = next(
-        (library for library in st.session_state['libraries'] if library['name'] == selected_library_name), None)
-
     st.divider()
 
     splitter_chunk_size = st.number_input(
