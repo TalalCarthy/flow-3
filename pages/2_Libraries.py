@@ -1,6 +1,17 @@
 import streamlit as st
 from modules.reset import reset
 
+
+def remove_libraries(bin):
+    for index, library in enumerate(st.session_state['libraries']):
+        if library['name'] in bin:
+            del st.session_state['libraries'][index]
+
+
+def reset_library_array():
+    st.session_state['libraries'] = []
+
+
 # Reset the session
 reset()
 
@@ -9,12 +20,13 @@ st.title("Libraries")
 with st.form("Create a Library", clear_on_submit=True):
     name = st.text_input("Please write Library name")
 
-    selected_data_sources = []
-    for index, data_source in enumerate(st.session_state['data_sources']):
-        add_source = st.checkbox(
-            f"{data_source['name']} - {data_source['file_name']}")
-        if add_source:
-            selected_data_sources.append(index)
+    source_names = (source['name']
+                    for source in st.session_state['data_sources'])
+    selected_data_source_names = st.multiselect(
+        "Select Data Sources:", source_names)
+
+    selected_data_sources = [index for index, source in enumerate(
+        st.session_state['data_sources']) if source['name'] in selected_data_source_names]
 
     submitted = st.form_submit_button("Create Library")
     if submitted:
@@ -28,13 +40,6 @@ with st.form("Create a Library", clear_on_submit=True):
             st.success("Library created successfully", icon="✅")
 
 st.divider()
-
-# Remove the libraries in bin (must be done before displaying the libraries)
-for index in st.session_state['bin']:
-    del st.session_state['libraries'][index]
-st.session_state['bin'] = []
-
-
 st.write("View Libraries")
 
 for index, library in enumerate(st.session_state['libraries']):
@@ -45,16 +50,9 @@ for index, library in enumerate(st.session_state['libraries']):
 
 
 st.divider()
-
 st.write("Delete Libraries")
+st.button("Delete All Libraries", on_click=reset_library_array)
 
-if st.button("Delete All Libraries"):
-    st.session_state['libraries'] = []
-    st.session_state['bin'] = []
-
-
-for index, library in enumerate(st.session_state['libraries']):
-    delete_key = st.button(
-        f"🗑️ {library['name']}", key=index)
-    if delete_key:
-        st.session_state['bin'].append(index)
+library_names = (library['name'] for library in st.session_state['libraries'])
+bin = st.multiselect("Delete:", library_names)
+st.button("Clear bin", on_click=remove_libraries, args=[bin])

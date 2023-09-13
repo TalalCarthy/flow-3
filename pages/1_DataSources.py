@@ -2,6 +2,17 @@ import streamlit as st
 from modules.reset import reset
 from modules.file import get_document
 
+
+def remove_sources(bin):
+    for index, source in enumerate(st.session_state['data_sources']):
+        if source['name'] in bin:
+            del st.session_state['data_sources'][index]
+
+
+def reset_sources_array():
+    st.session_state['data_sources'] = []
+
+
 # Reset the session
 reset()
 
@@ -32,21 +43,14 @@ with st.form("Create a DataSource", clear_on_submit=True):
 st.divider()
 
 st.write('View DataSources')
+source_names = (source['name'] for source in st.session_state['data_sources'])
 
-# Remove the data sources
-for index in st.session_state['bin']:
-    del st.session_state['data_sources'][index]
-st.session_state['bin'] = []
+for index, source in enumerate(st.session_state['data_sources']):
+    with st.expander(f'{index}. {source["name"]}'):
+        st.write(source['file_name'])
 
 
-if st.button("Clear Data Sources"):
-    st.session_state['data_sources'] = []
-    st.session_state['bin'] = []
+st.button("Clear Data Sources", on_click=reset_sources_array)
 
-key = 0
-for data_source in st.session_state['data_sources']:
-    delete_key = st.button(
-        f"🗑️ {data_source['name']} - {data_source['file_name']}", key=key)
-    if delete_key:
-        st.session_state['bin'].append(key)
-    key += 1
+bin = st.multiselect("Delete:", source_names)
+st.button("Clear bin", on_click=remove_sources, args=[bin])
