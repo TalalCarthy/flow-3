@@ -16,14 +16,10 @@ def set_chain(session_prefix, chain_type):
             memory=st.session_state[f'{session_prefix}_llm_chain_memory'],
             verbose=True)
     elif chain_type == 'Retrieval QA':
-        chain_type_kwargs = {
-            "prompt": st.session_state[f'{session_prefix}_retrieval_qa_template']}
         st.session_state[f'{session_prefix}_chain'] = RetrievalQA.from_chain_type(
             llm=st.session_state[f'{session_prefix}_retrieval_qa_llm'],
             chain_type=st.session_state[f'{session_prefix}_document_chain_type'],
-            retriever=get_retriever(),
-            chain_type_kwargs=chain_type_kwargs,
-            verbose=True
+            retriever=get_retriever()
         )
     elif chain_type == 'Conversational Retrieval QA':
         st.session_state[f'{session_prefix}_chain'] = \

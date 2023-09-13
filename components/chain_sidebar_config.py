@@ -7,7 +7,6 @@ from config.chain_types import chain_types
 
 
 def chain_change_handler():
-    st.write("CHANGE")
     st.session_state['reconfigure_chain'] = True
 
 

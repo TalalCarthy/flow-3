@@ -27,7 +27,7 @@ with st.form("Create a DataSource", clear_on_submit=True):
                            'file_name': uploaded_file.name}
             st.session_state['data_sources'].append(data_source)
             st.success('Data Sources created successfully', icon="✅")
-            del uploaded_file  # KILL IT !!!
+            # del uploaded_file  # KILL IT !!!
 
 st.divider()
 
