@@ -26,16 +26,14 @@ def set_chain(session_prefix, chain_type):
             ConversationalRetrievalChain.from_llm(
             st.session_state[f'{session_prefix}_conversational_retrieval_qa_llm'],
             get_retriever(),
-            memory=st.session_state[f'{session_prefix}_conversational_retrieval_qa_memory'],
-            verbose=True
+            memory=st.session_state[f'{session_prefix}_conversational_retrieval_qa_memory']
         )
     elif chain_type == 'FLARE':
         st.session_state[f'{session_prefix}_chain'] = FlareChain.from_llm(
             st.session_state[f'{session_prefix}_flare_llm'],
             retriever=get_retriever(),
             max_generation_len=st.session_state[f'{session_prefix}_flare_max_generation_len'],
-            min_prob=st.session_state[f'{session_prefix}_flare_min_prob'],
-            verbose=True
+            min_prob=st.session_state[f'{session_prefix}_flare_min_prob']
         )
     elif chain_type == 'QA over in-memory documents':
         pass
