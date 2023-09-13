@@ -1,58 +1,35 @@
 import streamlit as st
-from modules.reset import reset
-from modules.retriever import get_retriever
-from modules.chain import get_chain
-from modules.planner import planner_chain
+import json
+
+
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import StreamlitCallbackHandler
-import json
+
+from modules.reset import reset
+from modules.retriever import get_retriever
+from modules.chain import set_chain
+
+from config.chain_types import chain_types
+
+from components.chain_sidebar_config import chain_sidebar_config
 
 # Reset the session
 reset()
 
 with st.sidebar:
-    # Token Limit
+    use_planner = st.checkbox(
+        "Use Planner", value=st.session_state['use_planner'])
+    if use_planner:
+        with st.expander("Planner"):
+            chain_sidebar_config('planner', 3000)
+        with st.expander("Executor"):
+            chain_sidebar_config('executor', 4000)
+    else:
+        chain_sidebar_config('executor', 4000)
+
+    st.session_state['use_planner'] = use_planner
 
     st.divider()
-
-    splitter_chunk_size = st.number_input(
-        "Text Splitter Chunk Size", min_value=0,
-        value=st.session_state['splitter_chunk_size'])
-    splitter_chunk_overlap = st.number_input(
-        "Text Splitter Chunk Overlap", min_value=0,
-        value=st.session_state['splitter_chunk_overlap'])
-
-    st.divider()
-
-    document_chain_type = st.selectbox('Select Document Chain Type', [
-        'stuff', 'refine', 'map_reduce', 'map_rerank'])
-    chain_type = st.selectbox('Select Chain Type', [
-                              'Retrieval QA', 'Document QA',
-                              'Conversational Retrieval QA'])
-
-    st.divider()
-
-    model_name = st.text_input("Model Name", value="gpt-4")
-    model_temperature = st.slider(
-        "Model Temperature", min_value=0.0, max_value=2.0, value=0.2, step=0.1)
-
-    use_planner = st.checkbox("Use Planner")
-
-    if st.button("Set Configuration"):
-        if selected_library:
-            st.session_state['library'] = selected_library
-        st.session_state['splitter_chunk_overlap'] = splitter_chunk_overlap
-        st.session_state['splitter_chunk_size'] = splitter_chunk_size
-
-        retriever = get_retriever()
-
-        st.session_state['chat_llm'] = ChatOpenAI(
-            model=model_name, temperature=model_temperature)
-
-        get_chain(chain_type=chain_type,
-                  document_chain_type=document_chain_type,
-                  retriever=retriever)
-        st.session_state['use_planner'] = use_planner
 
     # choose execution mode (regular mode, no context planner, context planner)
 
@@ -63,24 +40,22 @@ if prompt := st.chat_input("Enter a prompt"):
     with st.chat_message("assistant"):
         st_callback = StreamlitCallbackHandler(st.container())
 
-        plan_response_string = planner_chain.run(prompt=prompt)
-        plan_response = json.loads(plan_response_string)
+        response = st.session_state['executor_chain'].run(
+            prompt, callbacks=[st_callback])
 
-        if st.session_state['use_planner']:
-            for step in plan_response:
-                res = st.session_state['chain'].run(step)
-                with st.expander(step):
-                    st.write(res)
-            response = res
-        else:
-            response = st.session_state['chain'].run(
-                prompt, callbacks=[st_callback]
-            )
+        # plan_response_string = planner_chain.run(prompt=prompt)
+        # plan_response = json.loads(plan_response_string)
+
+        # if st.session_state['use_planner']:
+        #     for step in plan_response:
+        #         res = st.session_state['chain'].run(step)
+        #         with st.expander(step):
+        #             st.write(res)
+        #     response = res
+        # else:
+        #     response = st.session_state['chain'].run(
+        #         prompt, callbacks=[st_callback]
+        #     )
 
         st.write(response)
-        st.json(plan_response)
-
-# $env:LANGCHAIN_TRACING_V2=true
-# $env:LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
-# $env:LANGCHAIN_API_KEY="ls__894e183705db4121be3ebbdeaee8b1ed"
-# $env:LANGCHAIN_PROJECT="flow"
+        # st.json(plan_response)
