@@ -50,21 +50,17 @@ if prompt := st.chat_input("Enter a prompt"):
             with st.expander("Enhanced Prompt"):
                 st.write(prompt)
 
-        response = st.session_state['executor_chain'].run(
-            prompt, callbacks=[st_callback])
-
-        # plan_response_string = planner_chain.run(prompt=prompt)
-        # plan_response = json.loads(plan_response_string)
-
-        # if st.session_state['use_planner']:
-        #     for step in plan_response:
-        #         res = st.session_state['chain'].run(step)
-        #         with st.expander(step):
-        #             st.write(res)
-        #     response = res
-        # else:
-        #     response = st.session_state['chain'].run(
-        #         prompt, callbacks=[st_callback]
-        #     )
+        if use_planner:
+            plan_response_string = st.session_state['planner_chain'].run(
+                prompt)
+            plan_response = json.loads(plan_response_string)
+            for step in plan_response:
+                res = st.session_state['executor_chain'].run(step)
+                with st.expander(step):
+                    st.write(res)
+            response = res
+        else:
+            response = st.session_state['executor_chain'].run(
+                prompt, callbacks=[st_callback])
 
         st.write(response)
