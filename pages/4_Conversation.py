@@ -44,15 +44,15 @@ if prompt := st.chat_input("Enter a prompt"):
     st.chat_message("user").write(prompt)
     with st.chat_message("assistant"):
         st_callback = StreamlitCallbackHandler(st.container())
-
-        if use_enhancer:
-            prompt = st.session_state['prompt_enhancer_chain'](prompt)
+        query = prompt
+        if st.session_state['use_enhancer']:
+            query = st.session_state['prompt_enhancer_chain'](prompt)['text']
             with st.expander("Enhanced Prompt"):
-                st.write(prompt)
+                st.write(query)
 
-        if use_planner:
+        if st.session_state['use_planner']:
             plan_response_string = st.session_state['planner_chain'].run(
-                prompt)
+                query)
             plan_response = json.loads(plan_response_string)
             for step in plan_response:
                 res = st.session_state['executor_chain'].run(step)
@@ -61,6 +61,6 @@ if prompt := st.chat_input("Enter a prompt"):
             response = res
         else:
             response = st.session_state['executor_chain'].run(
-                prompt, callbacks=[st_callback])
+                query, callbacks=[st_callback])
 
         st.write(response)

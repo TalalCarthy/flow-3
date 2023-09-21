@@ -29,9 +29,6 @@ def chain_config(session_prefix, start_key, default_template=None):
         with st.expander("LLM Chain Memory"):
             memory_config(f'{session_prefix}_llm_chain', start_key + 50)
     elif chain_type == 'Retrieval QA':
-        with st.expander("Retrieval QA Template"):
-            template_config(f'{session_prefix}_retrieval_qa',
-                            start_key + 100, default_value=default_template)
         with st.expander("Retrieval QA LLM"):
             llm_config(f'{session_prefix}_retrieval_qa', start_key + 110)
         st.session_state[f'{session_prefix}_document_chain_type'] \
@@ -41,9 +38,6 @@ def chain_config(session_prefix, start_key, default_template=None):
         st.session_state[f'{session_prefix}_document_chain_type_index'] = document_chain_types.index(
             st.session_state[f'{session_prefix}_document_chain_type'])
     elif chain_type == 'Conversational Retrieval QA':
-        with st.expander("Conversational Retrieval QA Template"):
-            template_config(
-                f'{session_prefix}_conversational_retrieval_qa', start_key + 200, default_value=default_template)
         with st.expander("Conversational Retrieval QA LLM"):
             llm_config(
                 f'{session_prefix}_conversational_retrieval_qa', start_key + 210)

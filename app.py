@@ -1,10 +1,25 @@
+import os
 import streamlit as st
 from dotenv import load_dotenv
 from modules.reset import reset
 
 
-# Load environment variables
-load_dotenv('.env')
+# config API stuff
+try:
+    load_dotenv('.env')
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    if api_key:
+        os.environ["OPENAI_API_KEY"] = api_key
+    else:
+        print("API key not found in environment variable or .env file.")
+except FileNotFoundError:
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    if api_key:
+        os.environ["OPENAI_API_KEY"] = api_key
+    else:
+        print("API key not found in environment variable or .env file.")
 
 # Reset the session
 reset()
