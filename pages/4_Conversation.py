@@ -17,6 +17,10 @@ from components.chain_sidebar_config import chain_sidebar_config
 reset()
 
 with st.sidebar:
+    use_enhancer = st.checkbox(
+        "Use Prompt Enhancer",
+        value=st.session_state.get("use_enhancer", False)
+    )
     use_planner = st.checkbox(
         "Use Planner", value=st.session_state['use_planner'])
     if use_planner:
@@ -28,6 +32,7 @@ with st.sidebar:
         chain_sidebar_config('executor', 4000)
 
     st.session_state['use_planner'] = use_planner
+    st.session_state['use_enhancer'] = use_enhancer
 
     st.divider()
 
@@ -39,23 +44,23 @@ if prompt := st.chat_input("Enter a prompt"):
     st.chat_message("user").write(prompt)
     with st.chat_message("assistant"):
         st_callback = StreamlitCallbackHandler(st.container())
+        query = prompt
+        if st.session_state['use_enhancer']:
+            query = st.session_state['prompt_enhancer_chain'](prompt)['text']
+            with st.expander("Enhanced Prompt"):
+                st.write(query)
 
-        response = st.session_state['executor_chain'].run(
-            prompt, callbacks=[st_callback])
-
-        # plan_response_string = planner_chain.run(prompt=prompt)
-        # plan_response = json.loads(plan_response_string)
-
-        # if st.session_state['use_planner']:
-        #     for step in plan_response:
-        #         res = st.session_state['chain'].run(step)
-        #         with st.expander(step):
-        #             st.write(res)
-        #     response = res
-        # else:
-        #     response = st.session_state['chain'].run(
-        #         prompt, callbacks=[st_callback]
-        #     )
+        if st.session_state['use_planner']:
+            plan_response_string = st.session_state['planner_chain'].run(
+                query)
+            plan_response = json.loads(plan_response_string)
+            for step in plan_response:
+                res = st.session_state['executor_chain'].run(step)
+                with st.expander(step):
+                    st.write(res)
+            response = res
+        else:
+            response = st.session_state['executor_chain'].run(
+                query, callbacks=[st_callback])
 
         st.write(response)
-        # st.json(plan_response)

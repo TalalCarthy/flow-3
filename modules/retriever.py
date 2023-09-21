@@ -10,6 +10,8 @@ def get_retriever():
         chunk_overlap=st.session_state['splitter_chunk_overlap'])
 
     docs = []
+    st.json(st.session_state['library'])
+    st.json(st.session_state['data_sources'])
     for source in st.session_state['library']['sources']:
         docs.extend(st.session_state['data_sources'][source]['file'])
 
