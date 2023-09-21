@@ -18,5 +18,10 @@ Response Guidelines: Your response must be a JSON array of strings. Ensure that 
 Response:
 """
 
+enhancer_template = """Please rephrase the following prompt to make it more
+ concise and understandable for another AI to answer: '{prompt}'
+ assume that the prompt's function is to extract data from a series of documents,
+   so the other AI can better understand the prompt and give a better response.
+ Rephrased prompt: """
 
-__all__ = ['planner_template']
+__all__ = ['planner_template', 'enhancer_template']

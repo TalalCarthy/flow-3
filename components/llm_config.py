@@ -5,8 +5,8 @@ from langchain.chat_models import ChatOpenAI
 
 def llm_config(session_prefix, start_key):
     llm_model_is_chat = st.checkbox(
-        "Chat Model", st.session_state.get(
-            f"{session_prefix}_llm_model_is_chat", False),
+        "Chat Model", value=st.session_state.get(
+            f"{session_prefix}_llm_model_is_chat", True),
         key=start_key)
     temperature = st.slider("Model Temperature:",
                             value=st.session_state.get(

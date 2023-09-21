@@ -17,6 +17,10 @@ from components.chain_sidebar_config import chain_sidebar_config
 reset()
 
 with st.sidebar:
+    use_enhancer = st.checkbox(
+        "Use Prompt Enhancer",
+        value=st.session_state.get("use_enhancer", False)
+    )
     use_planner = st.checkbox(
         "Use Planner", value=st.session_state['use_planner'])
     if use_planner:
@@ -28,6 +32,7 @@ with st.sidebar:
         chain_sidebar_config('executor', 4000)
 
     st.session_state['use_planner'] = use_planner
+    st.session_state['use_enhancer'] = use_enhancer
 
     st.divider()
 
@@ -39,6 +44,11 @@ if prompt := st.chat_input("Enter a prompt"):
     st.chat_message("user").write(prompt)
     with st.chat_message("assistant"):
         st_callback = StreamlitCallbackHandler(st.container())
+
+        if use_enhancer:
+            prompt = st.session_state['prompt_enhancer_chain'](prompt)
+            with st.expander("Enhanced Prompt"):
+                st.write(prompt)
 
         response = st.session_state['executor_chain'].run(
             prompt, callbacks=[st_callback])
@@ -58,4 +68,3 @@ if prompt := st.chat_input("Enter a prompt"):
         #     )
 
         st.write(response)
-        # st.json(plan_response)
