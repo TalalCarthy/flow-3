@@ -8,7 +8,7 @@ from components.memory_config import memory_config
 from components.template_config import template_config
 
 
-def chain_config(session_prefix, start_key):
+def chain_config(session_prefix, start_key, default_template=None):
     chain_type = st.selectbox(
         "Chain Type:", chain_types,
         index=st.session_state.get(f'{session_prefix}_chain_type_index', 0), key=start_key)
@@ -22,14 +22,16 @@ def chain_config(session_prefix, start_key):
 
     if chain_type == 'LLM Chain':
         with st.expander("LLM Chain Template"):
-            template_config(f'{session_prefix}_llm_chain', start_key+2)
+            template_config(f'{session_prefix}_llm_chain',
+                            start_key+2, default_value=default_template)
         with st.expander("LLM Chain LLM"):
             llm_config(f'{session_prefix}_llm_chain', start_key + 10)
         with st.expander("LLM Chain Memory"):
             memory_config(f'{session_prefix}_llm_chain', start_key + 50)
     elif chain_type == 'Retrieval QA':
         with st.expander("Retrieval QA Template"):
-            template_config(f'{session_prefix}_retrieval_qa', start_key + 100)
+            template_config(f'{session_prefix}_retrieval_qa',
+                            start_key + 100, default_value=default_template)
         with st.expander("Retrieval QA LLM"):
             llm_config(f'{session_prefix}_retrieval_qa', start_key + 110)
         st.session_state[f'{session_prefix}_document_chain_type'] \
@@ -41,7 +43,7 @@ def chain_config(session_prefix, start_key):
     elif chain_type == 'Conversational Retrieval QA':
         with st.expander("Conversational Retrieval QA Template"):
             template_config(
-                f'{session_prefix}_conversational_retrieval_qa', start_key + 200)
+                f'{session_prefix}_conversational_retrieval_qa', start_key + 200, default_value=default_template)
         with st.expander("Conversational Retrieval QA LLM"):
             llm_config(
                 f'{session_prefix}_conversational_retrieval_qa', start_key + 210)
@@ -50,7 +52,8 @@ def chain_config(session_prefix, start_key):
                 f'{session_prefix}_conversational_retrieval_qa', start_key + 220)
     elif chain_type == 'FLARE':
         with st.expander("FLARE Template"):
-            template_config(f'{session_prefix}_flare', start_key + 300)
+            template_config(f'{session_prefix}_flare',
+                            start_key + 300, default_value=default_template)
         with st.expander("FLARE LLM"):
             llm_config(f'{session_prefix}_flare', start_key + 310)
         with st.expander("FLARE Memory"):

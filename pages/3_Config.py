@@ -6,6 +6,7 @@ from components.llm_config import llm_config
 from components.template_config import template_config
 
 from config.templates import enhancer_template
+from config.templates import planner_template
 
 from langchain.chains import LLMChain
 
@@ -26,7 +27,7 @@ st.session_state['splitter_chunk_overlap'] = st.number_input(
 st.divider()
 st.write("Planner:")
 
-chain_config('planner', start_key=0)
+chain_config('planner', start_key=0, default_template=planner_template)
 
 st.divider()
 st.write("Executor:")
