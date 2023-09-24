@@ -3,6 +3,7 @@ from config.data_source_types import data_source_types
 from modules.file import get_document
 
 from langchain.document_loaders import AirtableLoader
+from langchain.document_loaders import BSHTMLLoader
 
 
 def submit_handler(name, file_name, document):
@@ -43,7 +44,9 @@ def data_selection():
 
             st.session_state['AIRTABLE_API_KEY'] = airtable_api_key
         elif selected_type == 'HTML page':
-            pass
+            html_link = st.text_input('Path/Link to HTML page')
+            if st.form_submit_button("Create DataSource"):
+                submit_handler(name, name, BSHTMLLoader(html_link).load())
 
 
 __all__ = ['data_selection']
