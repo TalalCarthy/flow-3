@@ -24,7 +24,7 @@ with st.form("Create a DataSource", clear_on_submit=True):
     name = st.text_input('Please write DataSource name')
 
     uploaded_file = st.file_uploader(
-        "Upload a file:", type=['txt', 'pdf', 'docx'])
+        "Upload a file:", type=['txt', 'pdf', 'docx', 'json', 'csv'])
 
     submitted = st.form_submit_button("Create DataSource")
     if submitted:

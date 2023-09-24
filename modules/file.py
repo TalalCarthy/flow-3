@@ -2,6 +2,8 @@ from langchain.document_loaders import TextLoader
 from langchain.document_loaders import PyPDFLoader
 from langchain.document_loaders import Docx2txtLoader
 from langchain.schema.document import Document
+from langchain.document_loaders import JSONLoader
+from langchain.document_loaders.csv_loader import CSVLoader
 
 
 def save_binary(uploaded_file, save_path):
@@ -20,6 +22,16 @@ def get_document(uploaded_file):
     elif uploaded_file.name.endswith('.docx'):
         save_binary(uploaded_file, './files/docx.docx')
         return Docx2txtLoader('./files/docx.docx').load()
+    elif uploaded_file.name.endswith('.json'):
+        with open('./files/json.json', 'w') as f:
+            f.write(uploaded_file.getvalue())
+        return JSONLoader('./files/json.json',
+                          jq_schema='',
+                          text_content=False)
+    elif uploaded_file.name.endswith('.csv'):
+        save_binary(uploaded_file, './files/csv.csv')
+        return CSVLoader('./files/csv.csv')
+
     return None
 
 
