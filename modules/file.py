@@ -27,10 +27,10 @@ def get_document(uploaded_file):
             f.write(uploaded_file.getvalue())
         return JSONLoader('./files/json.json',
                           jq_schema='',
-                          text_content=False)
+                          text_content=False).load()
     elif uploaded_file.name.endswith('.csv'):
         save_binary(uploaded_file, './files/csv.csv')
-        return CSVLoader('./files/csv.csv')
+        return CSVLoader('./files/csv.csv').load()
 
     return None
 
