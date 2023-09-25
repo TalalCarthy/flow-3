@@ -1,2 +1,2 @@
-python==3.11
-sqlite3>=3.35.0
+python
+sqlite3
