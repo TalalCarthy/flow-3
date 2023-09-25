@@ -37,8 +37,8 @@ chain_config('executor', start_key=2000)
 st.divider()
 st.write("Prompt Enhancer")
 
-llm_config('prompt_enhancer', start_key=2700)
-template_config('prompt_enhancer', start_key=2800,
+llm_config('prompt_enhancer', start_key=3000)
+template_config('prompt_enhancer', start_key=3200,
                 default_value=enhancer_template)
 st.session_state['prompt_enhancer_chain'] = LLMChain(
     llm=st.session_state.get('prompt_enhancer_llm', None),

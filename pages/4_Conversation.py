@@ -25,11 +25,11 @@ with st.sidebar:
         "Use Planner", value=st.session_state['use_planner'])
     if use_planner:
         with st.expander("Planner"):
-            chain_sidebar_config('planner', 3000)
+            chain_sidebar_config('planner', 10000)
         with st.expander("Executor"):
-            chain_sidebar_config('executor', 4000)
+            chain_sidebar_config('executor', 12000)
     else:
-        chain_sidebar_config('executor', 4000)
+        chain_sidebar_config('executor', 13000)
 
     st.session_state['use_planner'] = use_planner
     st.session_state['use_enhancer'] = use_enhancer

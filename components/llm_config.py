@@ -22,9 +22,11 @@ def llm_config(session_prefix, start_key):
     st.session_state[f"{session_prefix}_llm_model_name"] = model_name
 
     if llm_model_is_chat:
-        llm = ChatOpenAI(model=model_name, temperature=temperature)
+        llm = ChatOpenAI(model=model_name if model_name else 'gpt-4',
+                         temperature=temperature if temperature else 0.0)
     else:
-        llm = OpenAI(model=model_name, temperature=temperature)
+        llm = OpenAI(model=model_name if model_name else '',
+                     temperature=temperature if temperature else 0.0)
     st.session_state[f"{session_prefix}_llm"] = llm
 
 
