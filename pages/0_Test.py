@@ -1,3 +1,4 @@
+import sys
 import streamlit as st
 
 from langchain.chains import RetrievalQA
@@ -10,6 +11,9 @@ from langchain.vectorstores import Chroma
 from modules.file import get_document
 
 st.title("Chroma test")
+
+st.write(sys.version)
+st.write(sys.version_info)
 
 prompt = st.text_input("Prompt")
 uploaded_file = st.file_uploader("Upload file")
