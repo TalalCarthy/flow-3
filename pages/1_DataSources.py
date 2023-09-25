@@ -18,11 +18,9 @@ def reset_sources_array():
 reset()
 
 st.title("Data Sources")
-
 st.write("DataSource management")
 
-
-data_selection()
+data_selection()  # Create new Data Source
 
 st.divider()
 

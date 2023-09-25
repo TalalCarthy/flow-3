@@ -28,4 +28,4 @@ def llm_config(session_prefix, start_key):
     st.session_state[f"{session_prefix}_llm"] = llm
 
 
-__all_ = ['choose_llm']
+__all_ = ['llm_config']

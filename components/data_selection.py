@@ -34,15 +34,18 @@ def data_selection():
                                    get_document(uploaded_file))
         elif selected_type == 'AirTable':
             airtable_api_key = st.text_input(
-                'AirTable API key', value=st.session_state.get('AIRTABLE_API_KEY', ''))
+                'AirTable API key',
+                value=st.session_state.get('AIRTABLE_API_KEY', ''))
             airtable_base_id = st.text_input('AirTable Base ID')
             airtable_table_id = st.text_input('AirTable Table ID')
 
+            st.session_state['AIRTABLE_API_KEY'] = airtable_api_key
             if st.form_submit_button("Create DataSource"):
                 submit_handler(name, name, AirtableLoader(
-                    airtable_api_key, airtable_table_id, airtable_base_id).load())
+                    airtable_api_key,
+                    airtable_table_id,
+                    airtable_base_id).load())
 
-            st.session_state['AIRTABLE_API_KEY'] = airtable_api_key
         elif selected_type == 'HTML page':
             html_link = st.text_input('Path/Link to HTML page')
             if st.form_submit_button("Create DataSource"):

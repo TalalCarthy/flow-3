@@ -1,6 +1,5 @@
 
 data_source_types = [
-    'Choose your option...',
     'upload file',
     'AirTable',
     'HTML page'
