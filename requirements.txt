@@ -4,4 +4,6 @@ langchain
 python-dotenv
 docx2txt
 pypdf
+jq
+pyairtable
 chromadb
