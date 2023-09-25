@@ -7,4 +7,3 @@ pypdf
 jq
 pyairtable
 chromadb
-SQLAlchemy==1.4.0
