@@ -1,14 +1,16 @@
-import sys
-import streamlit as st
-
-from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import Chroma
-
-
 from modules.file import get_document
+from langchain.vectorstores import Chroma
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import RetrievalQA
+import streamlit as st
+import sys
+__import__('pysqlite3')
+
+
+sys.modules['sqlite3'] = sys.modules.pip('pysqlite3')
+
 
 st.title("Chroma test")
 
