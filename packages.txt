@@ -9,5 +9,5 @@ libffi-dev
 libsqlite3-dev 
 wget 
 libbz2-dev
-python3 -y
+python3
 sqlite3
