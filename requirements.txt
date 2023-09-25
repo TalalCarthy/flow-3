@@ -5,3 +5,4 @@ python-dotenv
 docx2txt
 pypdf
 chromadb
+sqlite>=3.35.0
