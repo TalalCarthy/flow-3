@@ -29,7 +29,7 @@ with st.sidebar:
         with st.expander("Executor"):
             chain_sidebar_config('executor', 12000)
     else:
-        chain_sidebar_config('executor', 10000)
+        chain_sidebar_config('executor', 13000)
 
     st.session_state['use_planner'] = use_planner
     st.session_state['use_enhancer'] = use_enhancer

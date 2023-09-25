@@ -15,6 +15,8 @@ def get_retriever():
     for source in st.session_state['library']['sources']:
         docs.extend(st.session_state['data_sources'][source]['file'])
 
+    st.json(docs)
+
     docs = text_splitter.split_documents(docs)
     db = Chroma.from_documents(docs, OpenAIEmbeddings())
     return db.as_retriever()
