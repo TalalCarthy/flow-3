@@ -9,16 +9,16 @@ def get_retriever():
         chunk_size=st.session_state['splitter_chunk_size'],
         chunk_overlap=st.session_state['splitter_chunk_overlap'])
 
+    embedding_function = OpenAIEmbeddings()
+
     docs = []
     st.json(st.session_state['library'])
     st.json(st.session_state['data_sources'])
     for source in st.session_state['library']['sources']:
         docs.extend(st.session_state['data_sources'][source]['file'])
 
-    st.json(docs)
-
-    docs = text_splitter.split_documents(docs)
-    db = Chroma.from_documents(docs, OpenAIEmbeddings())
+    split_docs = text_splitter.split_documents(docs)
+    db = Chroma.from_documents(split_docs, embedding_function)
     return db.as_retriever()
 
 
