@@ -8,3 +8,4 @@ jq
 pyairtable
 chromadb
 sqlalchemy
+pysqlite3-binary
