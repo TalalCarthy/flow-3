@@ -5,6 +5,13 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from modules.file import get_document
+from langchain.document_loaders import AsyncChromiumLoader
+from langchain.document_transformers import BeautifulSoupTransformer
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.retrievers.html_retriever import HTMLRetriever
+
+
 import sys
 __import__('pysqlite3')
 
@@ -12,25 +19,20 @@ __import__('pysqlite3')
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 
-st.title("Chroma test")
+st.title("Scrape test")
 
-st.write(sys.version)
-st.write(sys.version_info)
 
-prompt = st.text_input("Prompt")
-uploaded_file = st.file_uploader("Upload file")
+prompt = st.text_input("Prompt:")
+url = st.text_input("URL:")
 
 
 if st.button("Submit"):
-    docs = get_document(uploaded_file)
+    loader = AsyncChromiumLoader([url])
+    html = loader.load()
+    vectorstore = Chroma(embedding_function=OpenAIEmbeddings())
+    retriever = HTMLRetriever(vectorstore=vectorstore, html=html)
+
     llm = ChatOpenAI(model='gpt-4', temperature=0.0)
-
-    text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
-    embedding_function = OpenAIEmbeddings()
-
-    split_docs = text_splitter.split_documents(docs)
-    db = Chroma.from_documents(split_docs, embedding_function)
-    retriever = db.as_retriever()
 
     test_chain = RetrievalQA.from_chain_type(
         llm=llm,
