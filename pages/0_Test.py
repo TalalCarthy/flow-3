@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
@@ -10,6 +11,9 @@ from langchain.document_transformers import BeautifulSoupTransformer
 
 import sys
 __import__('pysqlite3')
+
+
+os.system("playwright install")
 
 
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
