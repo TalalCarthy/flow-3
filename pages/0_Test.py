@@ -7,10 +7,6 @@ from langchain.vectorstores import Chroma
 from modules.file import get_document
 from langchain.document_loaders import AsyncChromiumLoader
 from langchain.document_transformers import BeautifulSoupTransformer
-from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.retrievers.html_retriever import HTMLRetriever
-
 
 import sys
 __import__('pysqlite3')
@@ -29,10 +25,15 @@ url = st.text_input("URL:")
 if st.button("Submit"):
     loader = AsyncChromiumLoader([url])
     html = loader.load()
-    vectorstore = Chroma(embedding_function=OpenAIEmbeddings())
-    retriever = HTMLRetriever(vectorstore=vectorstore, html=html)
 
     llm = ChatOpenAI(model='gpt-4', temperature=0.0)
+
+    text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
+    embedding_function = OpenAIEmbeddings()
+
+    split_docs = text_splitter.split_documents(html)
+    db = Chroma.from_documents(split_docs, embedding_function)
+    retriever = db.as_retriever()
 
     test_chain = RetrievalQA.from_chain_type(
         llm=llm,
