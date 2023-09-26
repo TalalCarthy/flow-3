@@ -25,12 +25,12 @@ st.session_state['splitter_chunk_overlap'] = st.number_input(
     value=st.session_state['splitter_chunk_overlap'])
 
 st.divider()
-st.write("Planner:")
+st.write("Set configuration for planner chains:")
 
 chain_config('planner', start_key=0, default_template=planner_template)
 
 st.divider()
-st.write("Executor:")
+st.write("Set configuration for executor chains:")
 
 chain_config('executor', start_key=2000)
 
